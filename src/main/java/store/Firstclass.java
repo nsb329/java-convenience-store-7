@@ -6,6 +6,8 @@ import java.util.List;
 
 public class Firstclass {
 	Filein file = new Filein();
+	PromotionHandler promotionHandler = new PromotionHandler();
+	int fin = 0;
 	List<String> itemNames = new ArrayList<>();
 	List<Integer> itemQuantities = new ArrayList<>();
 
@@ -23,10 +25,12 @@ public class Firstclass {
 			if (buyitem.contains(",")) {
 				String[] itemarr = buyitem.split(",");
 				processItems(itemarr, itemNames, itemQuantities);
+				calc(file.fileList, itemNames, itemQuantities);
 			}
 			if (!buyitem.contains(",")) {
 				String[] itemarr = { buyitem };
 				processItems(itemarr, itemNames, itemQuantities);
+				calc(file.fileList, itemNames, itemQuantities);
 			}
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
@@ -40,5 +44,34 @@ public class Firstclass {
 			itemNames.add(parts[0].trim());
 			itemQuantities.add(Integer.parseInt(parts[1].trim()));
 		}
+	}
+
+	public int calc(List<FileinVO> products, List<String> itemNames, List<Integer> itemQuantities) {
+		int total = 0;
+		for (int i = 0; i < itemNames.size(); i++) {
+			FileinVO product = findProduct(products, itemNames.get(i));
+			if (product != null) {
+				total = total + promotionHandler.applyPromotion(product, itemQuantities.get(i));
+			}
+			if (product == null) {
+				throw new IllegalArgumentException("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
+			}
+		}
+		System.out.println(total);
+		fin = total;
+		return total;
+	}
+
+	private FileinVO findProduct(List<FileinVO> products, String itemName) {
+		for (FileinVO product : products) {
+			if (isMatchingProduct(product, itemName)) {
+				return product;
+			}
+		}
+		return null;
+	}
+
+	private boolean isMatchingProduct(FileinVO product, String itemName) {
+		return product.getName().equals(itemName);
 	}
 }
