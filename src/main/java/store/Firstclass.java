@@ -10,13 +10,39 @@ public class Firstclass {
 	int fin = 0;
 	List<String> itemNames = new ArrayList<>();
 	List<Integer> itemQuantities = new ArrayList<>();
+	int memberDiscount = 0;
 
 	public void First() {
 		System.out.println("안녕하세요. w편의점입니다.\n현재 보유하고 있는 상품입니다.\n");
 		file.fileall(this);
 		System.out.println("\n구매하실 상품명과 수량을 입력해주세요. (예: [사이다-2],[감자칩-1])");
 		second();
+		Membership member = new Membership();
+		memberDiscount = member.member(fin);
 		System.out.println("감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)");
+		input();
+	}
+	
+	public void input() {
+		String go = Console.readLine();
+		try {
+			if (go.equals("Y")) {
+				First();
+			}
+			if (go.equals("N")) {
+				Result result = new Result();
+				result.printReceipt(file.fileList, itemNames, itemQuantities, fin, memberDiscount);
+			}
+			wrongEx(go);
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	
+	public void wrongEx(String go) {
+		if (!(go.equals("Y") || go.equals("N")))
+			throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.");
 	}
 
 	public void second() {
