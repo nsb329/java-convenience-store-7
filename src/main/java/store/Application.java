@@ -1,7 +1,12 @@
 package store;
 
+import java.io.IOException;
+
+import camp.nextstep.edu.missionutils.Console;
+
 public class Application {
     public static void main(String[] args) {
-        // TODO: 프로그램 구현
-    }
+    	Firstclass first = new Firstclass();
+    	first.First();
+    	}
 }
